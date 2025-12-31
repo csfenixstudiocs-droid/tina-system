@@ -40,8 +40,8 @@
     <header class="sticky top-0 z-40 sticky-nav px-4 md:px-6 py-3 flex flex-col items-stretch gap-3">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 bg-[#8C7B6E] rounded-xl flex items-center justify-center text-white shadow-md">
-                    <i data-lucide="crown" class="w-5 h-5"></i>
+                <div class="w-10 h-10 bg-[#8C7B6E] rounded-xl flex items-center justify-center text-white shadow-md">
+                    <i data-lucide="crown" class="w-6 h-6"></i>
                 </div>
                 <div>
                     <h1 class="text-lg md:text-xl serif font-bold text-[#8C7B6E] tracking-widest uppercase leading-tight">Classic Tina</h1>
@@ -57,7 +57,7 @@
                     <i data-lucide="bell" class="w-5 h-5"></i>
                     <span id="notif-badge" class="hidden absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full pulse-red"></span>
                 </button>
-                <div class="w-9 h-9 rounded-full bg-[#8C7B6E] flex items-center justify-center text-white shadow-sm font-bold text-xs">Tina</div>
+                <div class="w-9 h-9 rounded-full bg-[#8C7B6E] flex items-center justify-center text-white shadow-sm font-bold text-xs uppercase">Pro</div>
             </div>
         </div>
 
@@ -121,7 +121,7 @@
         <section id="sec-inventory" class="fade-in space-y-4">
             <div class="flex items-center justify-between px-2">
                 <h2 class="text-lg serif font-bold text-stone-800 flex items-center gap-2"><i data-lucide="shirt" class="w-4 h-4 text-[#8C7B6E]"></i>全庫存管理</h2>
-                <span id="gown-count" class="text-[8px] font-bold text-stone-400 bg-stone-100 px-2.5 py-1 rounded-full uppercase">0 件</span>
+                <span id="gown-count" class="text-[8px] font-bold text-stone-400 bg-stone-100 px-2 py-1 rounded-full uppercase">載入中</span>
             </div>
             <div class="section-card overflow-hidden overflow-x-auto shadow-sm">
                 <table class="w-full text-left text-sm min-w-[500px]">
@@ -130,7 +130,7 @@
                     </thead>
                     <tbody id="inventory-table" class="divide-y divide-stone-50"></tbody>
                 </table>
-                <div id="inventory-empty" class="p-12 text-center text-stone-300 italic text-xs uppercase tracking-widest">目前無庫存資料</div>
+                <div id="inventory-empty" class="hidden p-12 text-center text-stone-300 italic text-xs uppercase tracking-widest">目前無庫存資料</div>
             </div>
         </section>
 
@@ -138,33 +138,35 @@
         <section id="sec-customers" class="fade-in space-y-4">
             <div class="flex items-center justify-between px-2">
                 <h2 class="text-lg serif font-bold text-stone-800 flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-[#8C7B6E]"></i>客人檔案 (CRM)</h2>
-                <span id="cust-count" class="text-[8px] font-bold text-stone-400 bg-stone-100 px-2.5 py-1 rounded-full uppercase">0 位</span>
+                <span id="cust-count" class="text-[8px] font-bold text-stone-400 bg-stone-100 px-2.5 py-1 rounded-full uppercase">載入中</span>
             </div>
             <div id="customer-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-            <div id="customers-empty" class="p-12 text-center text-stone-300 italic text-xs section-card">目前無客人檔案</div>
+            <div id="customers-empty" class="hidden p-12 text-center text-stone-300 italic text-xs section-card">目前無客人檔案</div>
         </section>
 
         <!-- 區域: 租借排程 -->
         <section id="sec-rentals" class="fade-in space-y-4">
             <div class="flex items-center justify-between px-2">
                 <h2 class="text-lg serif font-bold text-stone-800 flex items-center gap-2"><i data-lucide="calendar-days" class="w-4 h-4 text-[#8C7B6E]"></i>租借排程總覽</h2>
-                <span id="rent-count" class="text-[8px] font-bold text-stone-400 bg-stone-100 px-2.5 py-1 rounded-full uppercase">0 筆</span>
+                <span id="rent-count" class="text-[8px] font-bold text-stone-400 bg-stone-100 px-2.5 py-1 rounded-full uppercase">載入中</span>
             </div>
             <div id="rental-list" class="space-y-4"></div>
-            <div id="rentals-empty" class="p-12 text-center text-stone-300 italic text-xs section-card border-2 border-dashed border-stone-200">無預約紀錄</div>
+            <div id="rentals-empty" class="hidden p-12 text-center text-stone-300 italic text-xs section-card border-2 border-dashed border-stone-200">無預約紀錄</div>
         </section>
 
     </main>
 
-    <!-- Modals -->
+    <!-- --- Modals --- -->
+
+    <!-- 新增庫存 -->
     <div id="modal-gown" class="hidden fixed inset-0 z-[150] flex items-center justify-center p-4 modal-backdrop">
         <div class="bg-white w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden fade-in max-h-[85vh] flex flex-col border border-stone-100">
-            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center shrink-0"><h3 class="font-bold serif text-lg text-white">服飾資產入庫</h3><button onclick="window.closeModal('modal-gown')" class="p-1 text-white"><i data-lucide="x"></i></button></div>
+            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center shrink-0"><h3 class="font-bold serif text-lg">服飾資產入庫</h3><button onclick="window.closeModal('modal-gown')" class="p-1"><i data-lucide="x"></i></button></div>
             <div class="p-6 space-y-5 overflow-y-auto custom-scroll">
                 <div>
                     <label class="text-[10px] font-bold text-stone-400 uppercase block mb-1.5 ml-1">項目名稱</label>
                     <div class="flex gap-2">
-                        <input type="text" id="gown-name" class="flex-1 border border-stone-200 rounded-xl p-3.5 text-sm focus:border-[#8C7B6E] outline-none" placeholder="例如：法式珠寶蕾絲大拖尾">
+                        <input type="text" id="gown-name" class="flex-1 border border-stone-200 rounded-xl p-3.5 text-sm focus:border-[#8C7B6E] outline-none" placeholder="例如：法式手工蕾絲婚紗">
                         <button onclick="window.aiGenerateDesc()" id="btn-ai-desc" class="bg-stone-50 border border-stone-200 text-[#8C7B6E] p-3.5 rounded-xl active:bg-[#8C7B6E] active:text-white transition-all shadow-sm">✨</button>
                     </div>
                 </div>
@@ -178,9 +180,10 @@
         </div>
     </div>
 
+    <!-- 客人檔案 -->
     <div id="modal-customer" class="hidden fixed inset-0 z-[150] flex items-center justify-center p-4 modal-backdrop">
         <div class="bg-white w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden fade-in max-h-[85vh] flex flex-col border border-stone-100">
-            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center shrink-0"><h3 class="font-bold serif text-lg text-white">建立客人檔案</h3><button onclick="window.closeModal('modal-customer')" class="p-1 text-white"><i data-lucide="x"></i></button></div>
+            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center shrink-0"><h3 class="font-bold serif text-lg">建立客人檔案</h3><button onclick="window.closeModal('modal-customer')" class="p-1"><i data-lucide="x"></i></button></div>
             <div class="p-6 space-y-5 overflow-y-auto custom-scroll">
                 <input type="text" id="cust-name" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none shadow-sm" placeholder="新娘姓名">
                 <input type="text" id="cust-phone" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none shadow-sm" placeholder="聯絡電話">
@@ -191,9 +194,10 @@
         </div>
     </div>
 
+    <!-- 租借預約 -->
     <div id="modal-rental" class="hidden fixed inset-0 z-[150] flex items-center justify-center p-4 modal-backdrop">
         <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden fade-in max-h-[90vh] flex flex-col border border-stone-100">
-            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center shrink-0"><h3 class="font-bold serif text-lg text-white uppercase tracking-widest">預約登記</h3><button onclick="window.closeModal('modal-rental')" class="p-1 text-white"><i data-lucide="x"></i></button></div>
+            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center shrink-0"><h3 class="font-bold serif text-lg uppercase tracking-widest">預約登記</h3><button onclick="window.closeModal('modal-rental')" class="p-1"><i data-lucide="x"></i></button></div>
             <div class="p-6 space-y-6 overflow-y-auto custom-scroll">
                 <div class="grid grid-cols-2 gap-4">
                     <div><label class="text-[10px] font-bold text-stone-400 block mb-1.5 ml-1 uppercase">選擇服飾</label><select id="rent-gown" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none bg-stone-50"></select></div>
@@ -228,11 +232,11 @@
     <div id="modal-notifications" class="hidden fixed inset-0 z-[160] flex items-center justify-center p-4 modal-backdrop">
         <div class="bg-white w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden fade-in border-t-8 border-red-400 flex flex-col max-h-[80vh]">
             <div class="p-6 shrink-0 flex justify-between items-center">
-                <h3 class="text-xl serif font-bold flex items-center gap-2 text-stone-800 text-[#FDFBF9]"><i data-lucide="bell-ring" class="w-5 h-5 text-red-400"></i> 近期提醒</h3>
+                <h3 class="text-xl serif font-bold flex items-center gap-2 text-stone-800 text-white"><i data-lucide="bell-ring" class="w-5 h-5 text-red-400"></i> 近期提醒</h3>
                 <button onclick="window.closeModal('modal-notifications')" class="p-1 text-white"><i data-lucide="x"></i></button>
             </div>
             <div id="notif-list" class="flex-1 p-6 space-y-4 overflow-y-auto custom-scroll pt-0 pr-4 text-stone-700"></div>
-            <div id="notif-empty" class="hidden py-12 text-center text-stone-400 italic serif text-sm">目前無待辦提醒。</div>
+            <div id="notif-empty" class="hidden py-12 text-center text-stone-400 italic serif text-sm">目前無待辦工作。</div>
             <div class="p-6 shrink-0 border-t border-stone-100 bg-white">
                 <button onclick="window.closeModal('modal-notifications')" class="w-full bg-stone-100 text-stone-600 py-3.5 rounded-xl font-bold active:bg-stone-200 transition-all">關閉視窗</button>
             </div>
@@ -246,14 +250,14 @@
 
         // --- 初始化配置 ---
         const configRaw = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
-        // 修正關鍵：變數名稱一致性
+        // 修正關鍵：變數名稱一致性 configRaw
         let firebaseConfig = configRaw ? JSON.parse(configRaw) : { apiKey: "preview", authDomain: "preview", projectId: "fenixclub-classic-tina" };
         
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'fenixclub-classic-tina';
-        const apiKey = ""; // Gemini API Key
+        const apiKey = ""; 
 
         let gowns = [], customers = [], rentals = [], currentUser = null;
 
@@ -308,7 +312,7 @@
 
             window.addGown = async () => {
                 const nEl = document.getElementById('gown-name');
-                if(!nEl || !nEl.value) return showToast("請輸入項目名稱");
+                if(!nEl || !nEl.value) return showToast("請輸入名稱");
                 if(!currentUser) return showToast("雲端連線中，請稍候...");
                 try {
                     await addDoc(collection(db,'artifacts',appId,'public','data','gowns'),{ name:nEl.value, type:document.getElementById('gown-type').value, location:document.getElementById('gown-location').value, description:document.getElementById('gown-desc').value, status:'Available', createdAt:new Date().toISOString() });
@@ -329,7 +333,7 @@
             window.addRental = async () => {
                 const gid = document.getElementById('rent-gown').value;
                 const cname = document.getElementById('rent-cust').value;
-                if(!gid || !cname) return showToast("資料不齊全");
+                if(!gid || !cname) return showToast("資料不全");
                 if(!currentUser) return showToast("雲端連線中...");
                 try {
                     await addDoc(collection(db,'artifacts',appId,'public','data','rentals'),{ gownId:gid, gownName:gowns.find(x=>x.id===gid)?.name || "未知", customerName:cname, startDate:document.getElementById('rent-start').value, endDate:document.getElementById('rent-end').value, status:'Confirmed', createdAt:new Date().toISOString() });
@@ -339,7 +343,7 @@
 
             window.deleteDocHandler = async (col, id) => {
                 if(!currentUser) return showToast("雲端未連線");
-                if(confirm("確定永久刪除此資料？資料將無法恢復。")) { await deleteDoc(doc(db,'artifacts',appId,'public','data',col,id)); showToast("已從雲端移除資料"); }
+                if(confirm("確定刪除此資料？資料將無法恢復。")) { await deleteDoc(doc(db,'artifacts',appId,'public','data',col,id)); showToast("已從雲端移除資料"); }
             };
 
             window.checkConflicts = () => {
@@ -387,7 +391,7 @@
             };
         };
 
-        // --- ✨ Gemini AI 核心邏輯 (指數退避重試) ---
+        // --- ✨ Gemini AI 核心功能 (指數退避重試) ---
         const callGemini = async (prompt, system) => {
             const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             let delay = 1000;
@@ -427,7 +431,7 @@
         function renderCustomers(term = '') {
             const grid = document.getElementById('customer-grid');
             if(!grid) return;
-            const filtered = customers.filter(c => c.name.toLowerCase().includes(term.toLowerCase()) || (c.phone && c.phone.includes(term)));
+            const filtered = customers.filter(c => c.name.toLowerCase().includes(term.toLowerCase()) || c.phone.includes(term));
             grid.innerHTML = filtered.map(c => `
                 <div class="bg-white p-5 section-card flex justify-between items-start fade-in shadow-sm hover:shadow-md transition-all">
                     <div><h3 class="font-bold text-stone-800 text-sm">${c.name}</h3><p class="text-[9px] text-stone-400 mt-1">${c.phone}</p><p class="text-[8px] font-bold text-[#8C7B6E] mt-3 uppercase tracking-widest">婚期: ${c.weddingDate || '未定'}</p></div>
@@ -447,7 +451,7 @@
             list.innerHTML = sorted.map(r => `
                 <div class="bg-white border border-stone-200 p-4 rounded-2xl shadow-sm border-l-[6px] border-[#8C7B6E] flex flex-col gap-3 fade-in">
                     <div class="flex justify-between items-start">
-                        <div class="flex gap-3"><div class="w-9 h-9 bg-stone-50 rounded-lg flex items-center justify-center text-[#8C7B6E] shadow-inner"><i data-lucide="calendar-check" class="w-5 h-5"></i></div><div><h4 class="text-sm font-bold text-stone-800">${r.customerName}</h4><p class="text-[9px] text-stone-400">${r.gownName}</p></div></div>
+                        <div class="flex gap-3"><div class="w-9 h-9 bg-stone-50 rounded-lg flex items-center justify-center text-[#8C7B6E]"><i data-lucide="calendar-check" class="w-5 h-5"></i></div><div><h4 class="text-sm font-bold text-stone-800">${r.customerName}</h4><p class="text-[9px] text-stone-400">${r.gownName}</p></div></div>
                         <button onclick="window.aiDraftWhatsApp('${r.id}')" class="text-[9px] font-bold text-[#8C7B6E] bg-stone-50 px-3 py-1.5 rounded-xl border border-stone-100 flex items-center gap-1 active:scale-90 transition-all"><i data-lucide="sparkles" class="w-3 h-3"></i> AI 提醒</button>
                     </div>
                     <div class="bg-stone-50 px-3 py-2 rounded-xl font-bold text-stone-500 text-[10px] flex justify-between items-center">
@@ -471,7 +475,7 @@
             const list = document.getElementById('notif-list');
             if(alerts.length > 0) {
                 if(badge) badge.classList.remove('hidden');
-                if(list) list.innerHTML = alerts.map(a => `<div class="p-4 rounded-xl bg-stone-50 border-l-4 ${a.color==='blue'?'border-blue-400':'border-red-400'} flex justify-between items-center mb-2"><h4 class="text-xs font-bold text-stone-700">${a.name} - ${a.type}</h4><span class="text-[10px] font-bold ${a.color==='blue'?'text-blue-500':'text-red-500'}">剩 ${a.days} 天</span></div>`).join('');
+                if(list) list.innerHTML = alerts.map(a => `<div class="p-4 rounded-xl bg-stone-50 border-l-4 ${a.color==='blue'?'border-blue-400':'border-red-400'} flex justify-between items-center mb-2 text-stone-700 font-bold"><h4 class="text-xs font-bold">${a.name} - ${a.type}</h4><span class="text-[10px] font-bold ${a.color==='blue'?'text-blue-500':'text-red-500'}">剩 ${a.days} 天</span></div>`).join('');
                 if(!window.notifDone) { window.openModal('modal-notifications'); window.notifDone=true; }
             } else { if(badge) badge.classList.add('hidden'); }
         }
