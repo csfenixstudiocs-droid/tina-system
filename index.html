@@ -22,44 +22,19 @@
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .fade-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .pulse-red { animation: pulseRed 2s infinite; }
-        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
         .section-card { background: white; border-radius: 1.5rem; border: 1px solid #E6E1DD; box-shadow: 0 4px 20px rgba(0,0,0,0.01); }
         .sticky-nav { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-bottom: 1px solid #E6E1DD; padding-top: var(--safe-top); }
         main { padding-bottom: calc(6rem + var(--safe-bottom)); padding-top: 1rem; }
+        #toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #4A443F; color: white; padding: 12px 24px; border-radius: 12px; font-size: 12px; z-index: 1000; opacity: 0; transition: opacity 0.3s; pointer-events: none; text-align: center; min-width: 250px; }
         .shimmer { background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        #toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #4A443F; color: white; padding: 12px 24px; border-radius: 12px; font-size: 12px; z-index: 1000; opacity: 0; transition: opacity 0.3s; pointer-events: none; text-align: center; width: 80%; max-width: 300px; }
     </style>
 </head>
 <body class="min-h-screen custom-scroll">
 
     <div id="toast"></div>
 
-    <!-- 加載遮罩 -->
-    <div id="loading-overlay" class="fixed inset-0 bg-[#FDFBF9] z-[200] flex flex-col items-center justify-center space-y-6 p-8 text-center transition-opacity duration-500">
-        <div class="relative">
-            <div class="w-16 h-16 border-4 border-stone-100 border-t-[#8C7B6E] rounded-full animate-spin"></div>
-            <i data-lucide="sparkles" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#8C7B6E] w-6 h-6"></i>
-        </div>
-        <div class="space-y-2">
-            <p class="serif text-lg text-[#8C7B6E] font-bold tracking-widest uppercase">Classic Tina</p>
-            <p id="loading-subtext" class="text-xs text-stone-400 animate-pulse uppercase tracking-widest">正在啟動雲端安全連線...</p>
-        </div>
-        
-        <!-- 自動顯示的解鎖區域 -->
-        <div id="setup-error" class="hidden mt-6 space-y-4 fade-in max-w-xs">
-            <div class="p-4 bg-amber-50 rounded-2xl border border-amber-100 text-left">
-                <p class="text-[10px] text-amber-700 leading-relaxed font-bold">
-                    ⚠️ 偵測到連線環境受限：<br>這通常是 iPhone 的隱私設定或 GitHub 託管限制。您可以點擊下方按鈕直接進入管理介面。
-                </p>
-            </div>
-            <button onclick="window.forceRevealApp()" class="w-full bg-[#8C7B6E] text-white py-4 rounded-2xl font-bold shadow-lg active:scale-95 transition-all text-sm uppercase tracking-widest shadow-[#8C7B6E]/20">進入系統介面</button>
-            <p class="text-[9px] text-stone-300">進入後請確認 Safari 的「防止跨網站追蹤」已關閉</p>
-        </div>
-    </div>
-
-    <!-- 頂部導航列 -->
+    <!-- 頂部導航 -->
     <header class="sticky top-0 z-40 sticky-nav px-4 md:px-6 py-3 flex flex-col items-stretch gap-3">
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -68,19 +43,18 @@
                 </div>
                 <div>
                     <h1 class="text-lg md:text-xl serif font-bold text-[#8C7B6E] tracking-widest uppercase leading-tight">Classic Tina</h1>
-                    <p class="text-[8px] md:text-[9px] text-stone-400 font-bold tracking-[0.1em] uppercase">✨ fenixclub Cloud AI Pro</p>
+                    <p class="text-[8px] md:text-[9px] text-stone-400 font-bold tracking-[0.1em] uppercase">✨ Cloud Management Pro</p>
                 </div>
             </div>
             
             <div class="flex items-center gap-2">
-                <button onclick="window.copyCurrentLink()" class="p-2.5 bg-stone-50 border border-stone-100 text-[#8C7B6E] rounded-xl active:scale-90 transition-all" title="複製連結">
-                    <i data-lucide="copy" class="w-5 h-5"></i>
+                <button onclick="window.openModal('modal-setup')" class="p-2.5 bg-stone-50 border border-stone-200 text-stone-400 rounded-xl active:scale-90 transition-all">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
                 </button>
                 <button onclick="window.openModal('modal-notifications')" class="relative p-2.5 bg-white border border-stone-100 text-stone-400 rounded-xl shadow-sm active:scale-90 transition-all">
                     <i data-lucide="bell" class="w-5 h-5"></i>
-                    <span id="notif-badge" class="hidden absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full pulse-red"></span>
+                    <span id="notif-badge" class="hidden absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
                 </button>
-                <div class="w-9 h-9 rounded-full bg-[#8C7B6E] flex items-center justify-center text-white shadow-sm font-bold text-xs uppercase">Pro</div>
             </div>
         </div>
 
@@ -88,25 +62,44 @@
             <div class="relative flex-1">
                 <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-300 w-3.5 h-3.5"></i>
                 <input type="text" id="globalSearch" placeholder="搜尋項目、客人姓名或電話..." onkeyup="window.handleGlobalSearch()" 
-                    class="w-full pl-10 pr-4 py-2.5 bg-white border border-stone-200 rounded-xl text-xs focus:border-[#8C7B6E] outline-none shadow-sm transition-all">
+                    class="w-full pl-10 pr-4 py-2.5 bg-white border border-stone-200 rounded-xl text-xs focus:border-[#8C7B6E] outline-none">
             </div>
-            <button onclick="window.exportToCSV()" class="p-2.5 bg-white border border-stone-200 rounded-xl text-[#8C7B6E] active:bg-stone-50 transition-all" title="匯出報表">
-                <i data-lucide="file-spreadsheet" class="w-5 h-5"></i>
+            <button onclick="window.exportToCSV()" class="p-2.5 bg-white border border-stone-200 rounded-xl text-[#8C7B6E] active:bg-stone-50 transition-all">
+                <i data-lucide="download" class="w-5 h-5"></i>
             </button>
         </div>
         
-        <div id="cloud-status-bar" class="flex items-center justify-center gap-2 py-1 bg-amber-50 text-amber-600 rounded-lg border border-amber-100/30 transition-all duration-500">
-            <span id="status-dot" class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span>
-            <span class="text-[9px] font-bold uppercase tracking-widest" id="status-text">正在連接雲端...</span>
+        <div id="cloud-status-bar" class="flex items-center justify-center gap-2 py-1 bg-stone-50 text-stone-300 rounded-lg border border-stone-100">
+            <span id="status-dot" class="w-1.5 h-1.5 bg-stone-300 rounded-full"></span>
+            <span class="text-[9px] font-bold uppercase tracking-widest" id="status-text">正在初始化...</span>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto p-4 md:p-6 space-y-10">
-        <!-- 快捷功能 -->
+        
+        <!-- 加載遮罩 -->
+        <div id="loading-overlay" class="fixed inset-0 bg-[#FDFBF9] z-[200] flex flex-col items-center justify-center space-y-6 p-8 text-center transition-opacity duration-500">
+            <div class="relative">
+                <div class="w-16 h-16 border-4 border-stone-100 border-t-[#8C7B6E] rounded-full animate-spin"></div>
+                <i data-lucide="sparkles" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[#8C7B6E] w-6 h-6"></i>
+            </div>
+            <p class="serif text-lg text-[#8C7B6E] font-bold tracking-widest uppercase">Classic Tina</p>
+            
+            <div id="setup-help" class="space-y-4 fade-in max-w-xs">
+                <div class="p-4 bg-amber-50 rounded-2xl border border-amber-100 text-left">
+                    <p class="text-[10px] text-amber-700 leading-relaxed font-bold">
+                        提示：連線時間較長，這可能是瀏覽器阻擋了 Google 驗證。<br>您可以點擊下方按鈕強制進入，之後再手動配置。
+                    </p>
+                </div>
+                <button onclick="window.forceRevealApp()" class="w-full bg-[#8C7B6E] text-white py-4 rounded-2xl font-bold shadow-lg active:scale-95 text-sm uppercase">直接進入介面</button>
+            </div>
+        </div>
+
+        <!-- 快速功能鍵 -->
         <section class="grid grid-cols-3 gap-3">
             <button onclick="window.openModal('modal-gown')" class="p-5 section-card active:scale-95 transition-all flex flex-col items-center gap-2 text-center shadow-sm">
                 <div class="w-10 h-10 rounded-xl bg-[#8C7B6E]/10 text-[#8C7B6E] flex items-center justify-center shadow-inner"><i data-lucide="plus-square" class="w-5 h-5"></i></div>
-                <span class="text-[10px] font-black text-stone-600 uppercase tracking-tighter">新入庫</span>
+                <span class="text-[10px] font-black text-stone-600 uppercase">新入庫</span>
             </button>
             <button onclick="window.openModal('modal-customer')" class="p-5 section-card active:scale-95 transition-all flex flex-col items-center gap-2 text-center shadow-sm">
                 <div class="w-10 h-10 rounded-xl bg-[#8C7B6E]/10 text-[#8C7B6E] flex items-center justify-center shadow-inner"><i data-lucide="user-plus" class="w-5 h-5"></i></div>
@@ -114,111 +107,124 @@
             </button>
             <button onclick="window.openModal('modal-rental')" class="p-5 section-card active:scale-95 transition-all flex flex-col items-center gap-2 text-center shadow-sm">
                 <div class="w-10 h-10 rounded-xl bg-[#8C7B6E]/10 text-[#8C7B6E] flex items-center justify-center shadow-inner"><i data-lucide="calendar" class="w-5 h-5"></i></div>
-                <span class="text-[10px] font-black text-stone-600 uppercase tracking-tighter">預約登記</span>
+                <span class="text-[10px] font-black text-stone-600 uppercase tracking-tighter">租借登記</span>
             </button>
         </section>
 
-        <!-- 區域: 庫存管理 -->
+        <!-- 庫存管理 -->
         <section id="sec-inventory" class="fade-in space-y-4">
             <div class="flex items-center justify-between px-2">
-                <h2 class="text-lg serif font-bold text-stone-800 flex items-center gap-2"><i data-lucide="shirt" class="w-4 h-4 text-[#8C7B6E]"></i>全庫存管理</h2>
+                <h2 class="text-lg serif font-bold text-stone-800 flex items-center gap-2"><i data-lucide="shirt" class="w-4 h-4 text-[#8C7B6E]"></i>庫存管理</h2>
                 <span id="gown-count" class="text-[8px] font-bold text-stone-400 bg-stone-100 px-2.5 py-1 rounded-full uppercase">0 件</span>
             </div>
             <div class="section-card overflow-hidden overflow-x-auto shadow-sm">
                 <table class="w-full text-left text-sm min-w-[500px]">
                     <thead class="bg-stone-50/50 text-stone-400 font-bold border-b border-stone-100 uppercase text-[9px] tracking-widest">
-                        <tr><th class="px-6 py-4">項目與類別</th><th class="px-6 py-4 text-center">狀態</th><th class="px-6 py-4">存放位置</th><th class="px-8 py-4 text-right">操作</th></tr>
+                        <tr><th class="px-6 py-4">服飾名稱</th><th class="px-6 py-4 text-center">狀態</th><th class="px-6 py-4">位置</th><th class="px-8 py-4 text-right"></th></tr>
                     </thead>
                     <tbody id="inventory-table" class="divide-y divide-stone-50"></tbody>
                 </table>
-                <div id="inventory-empty" class="p-12 text-center text-stone-300 italic text-xs uppercase tracking-widest">目前無雲端資料</div>
+                <div id="inventory-empty" class="p-12 text-center text-stone-300 italic text-xs uppercase tracking-widest">目前無庫存數據</div>
             </div>
         </section>
 
-        <!-- 區域: 客人檔案 -->
+        <!-- 客人檔案 -->
         <section id="sec-customers" class="fade-in space-y-4">
             <div class="flex items-center justify-between px-2">
-                <h2 class="text-lg serif font-bold text-stone-800 flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-[#8C7B6E]"></i>客人檔案 (CRM)</h2>
+                <h2 class="text-lg serif font-bold text-stone-800 flex items-center gap-2"><i data-lucide="users" class="w-4 h-4 text-[#8C7B6E]"></i>客人檔案</h2>
                 <span id="cust-count" class="text-[8px] font-bold text-stone-400 bg-stone-100 px-2.5 py-1 rounded-full uppercase">0 位</span>
             </div>
             <div id="customer-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
-            <div id="customers-empty" class="p-12 text-center text-stone-300 italic text-xs section-card">目前無客人檔案</div>
+            <div id="customers-empty" class="p-12 text-center text-stone-300 italic text-xs section-card">無新娘檔案</div>
         </section>
 
-        <!-- 區域: 租借排程 -->
+        <!-- 租借排程 -->
         <section id="sec-rentals" class="fade-in space-y-4">
             <div class="flex items-center justify-between px-2">
-                <h2 class="text-lg serif font-bold text-stone-800 flex items-center gap-2"><i data-lucide="calendar-days" class="w-4 h-4 text-[#8C7B6E]"></i>租借排程總覽</h2>
+                <h2 class="text-lg serif font-bold text-stone-800 flex items-center gap-2"><i data-lucide="calendar-days" class="w-4 h-4 text-[#8C7B6E]"></i>租借排程</h2>
                 <span id="rent-count" class="text-[8px] font-bold text-stone-400 bg-stone-100 px-2.5 py-1 rounded-full uppercase">0 筆</span>
             </div>
             <div id="rental-list" class="space-y-4"></div>
-            <div id="rentals-empty" class="p-12 text-center text-stone-300 italic text-xs section-card border-2 border-dashed border-stone-200">無預約紀錄</div>
+            <div id="rentals-empty" class="p-12 text-center text-stone-300 italic text-xs section-card border-2 border-dashed border-stone-200">無租借紀錄</div>
         </section>
     </main>
 
     <!-- Modals -->
+    <!-- 雲端手動設定 -->
+    <div id="modal-setup" class="hidden fixed inset-0 z-[250] flex items-center justify-center p-4 modal-backdrop">
+        <div class="bg-white w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden fade-in">
+            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center">
+                <h3 class="font-bold serif">自定義雲端設定</h3>
+                <button onclick="window.closeModal('modal-setup')"><i data-lucide="x"></i></button>
+            </div>
+            <div class="p-8 space-y-5">
+                <p class="text-xs text-stone-400 leading-relaxed italic">請貼入 Firebase SDK 配置 JSON。</p>
+                <textarea id="config-input" class="w-full h-40 border border-stone-200 rounded-xl p-3 text-[10px] font-mono bg-stone-50 outline-none" placeholder='{"apiKey": "...", "projectId": "...", ...}'></textarea>
+                <button onclick="saveManualConfig()" class="w-full bg-[#8C7B6E] text-white py-3 rounded-xl font-bold shadow-lg active:scale-95 transition-all">儲存並重啟連線</button>
+                <button onclick="clearConfig()" class="w-full text-red-400 text-xs py-2">清除目前設定</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 錄入服飾 -->
     <div id="modal-gown" class="hidden fixed inset-0 z-[150] flex items-center justify-center p-4 modal-backdrop">
-        <div class="bg-white w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden fade-in max-h-[85vh] flex flex-col border border-stone-100">
-            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center shrink-0"><h3 class="font-bold serif text-lg text-white">服飾資產入庫</h3><button onclick="window.closeModal('modal-gown')" class="p-1 text-white"><i data-lucide="x"></i></button></div>
-            <div class="p-6 space-y-5 overflow-y-auto custom-scroll">
-                <div>
-                    <label class="text-[10px] font-bold text-stone-400 uppercase block mb-1.5 ml-1">項目名稱</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="gown-name" class="flex-1 border border-stone-200 rounded-xl p-3.5 text-sm focus:border-[#8C7B6E] outline-none" placeholder="例如：法式手工蕾絲婚紗">
-                        <button onclick="window.aiGenerateDesc()" id="btn-ai-desc" class="bg-stone-50 border border-stone-200 text-[#8C7B6E] p-3.5 rounded-xl active:bg-[#8C7B6E] active:text-white transition-all shadow-sm">✨</button>
-                    </div>
-                </div>
+        <div class="bg-white w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden fade-in max-h-[85vh] flex flex-col">
+            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center"><h3 class="font-bold serif text-white">服飾資產錄入</h3><button onclick="window.closeModal('modal-gown')"><i data-lucide="x"></i></button></div>
+            <div class="p-8 space-y-5 overflow-y-auto custom-scroll">
+                <input type="text" id="gown-name" class="w-full border border-stone-200 rounded-xl p-3 text-sm focus:border-[#8C7B6E] outline-none" placeholder="項目名稱">
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-bold text-stone-400 uppercase block mb-1.5 text-stone-400">種類</label><select id="gown-type" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm bg-stone-50 outline-none"><option value="婚紗">婚紗</option><option value="晚裝">晚裝</option><option value="媽媽禮服">媽媽禮服</option><option value="旗袍裙褂">旗袍裙褂</option><option value="男士禮服">男士禮服</option></select></div>
-                    <div><label class="text-[10px] font-bold text-stone-400 uppercase block mb-1.5 text-stone-400">存放位置</label><input type="text" id="gown-location" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none bg-stone-50" placeholder="櫃 A"></div>
+                    <select id="gown-type" class="w-full border border-stone-200 rounded-xl p-3 text-sm bg-stone-50"><option>婚紗</option><option>晚裝</option><option>褂裙</option><option>媽媽禮服</option></select>
+                    <input type="text" id="gown-location" class="w-full border border-stone-200 rounded-xl p-3 text-sm outline-none bg-stone-50" placeholder="存放位置">
                 </div>
-                <div><label class="text-[10px] font-bold text-stone-400 uppercase block mb-1.5 tracking-widest ml-1 text-stone-400">✨ AI 工藝描述</label><textarea id="gown-desc" class="w-full border border-stone-200 rounded-xl p-4 text-sm h-32 outline-none resize-none bg-stone-50" placeholder="點擊 ✨ 生成描述..."></textarea></div>
+                <textarea id="gown-desc" class="w-full border border-stone-200 rounded-xl p-4 text-sm h-32 outline-none resize-none bg-stone-50" placeholder="工藝描述..."></textarea>
                 <button onclick="window.addGown()" class="w-full bg-[#8C7B6E] text-white py-4 rounded-xl font-bold shadow-lg active:scale-95 transition-all">確認儲存</button>
             </div>
         </div>
     </div>
 
+    <!-- 建立客人 -->
     <div id="modal-customer" class="hidden fixed inset-0 z-[150] flex items-center justify-center p-4 modal-backdrop">
-        <div class="bg-white w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden fade-in max-h-[85vh] flex flex-col border border-stone-100">
-            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center shrink-0"><h3 class="font-bold serif text-lg text-white">建立客人檔案</h3><button onclick="window.closeModal('modal-customer')" class="p-1 text-white"><i data-lucide="x"></i></button></div>
-            <div class="p-6 space-y-5 overflow-y-auto custom-scroll">
-                <input type="text" id="cust-name" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none shadow-sm" placeholder="新娘姓名">
+        <div class="bg-white w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden fade-in max-h-[85vh] flex flex-col">
+            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center"><h3 class="font-bold serif text-white">新娘檔案</h3><button onclick="window.closeModal('modal-customer')"><i data-lucide="x"></i></button></div>
+            <div class="p-8 space-y-5 overflow-y-auto custom-scroll">
+                <input type="text" id="cust-name" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none shadow-sm" placeholder="姓名">
                 <input type="text" id="cust-phone" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none shadow-sm" placeholder="聯絡電話">
-                <div><label class="text-[10px] font-bold text-stone-400 block mb-1.5 uppercase text-stone-400">重要日期 (婚期/活動)</label><input type="date" id="cust-date" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none bg-stone-50"></div>
-                <textarea id="cust-notes" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm h-32 outline-none resize-none bg-stone-50" placeholder="備註細節 (量身、修改、喜好)..."></textarea>
-                <button onclick="window.addCustomer()" class="w-full bg-[#8C7B6E] text-white py-4 rounded-xl font-bold shadow-lg active:scale-95 transition-all">正式儲存</button>
+                <div><label class="text-[10px] font-bold text-stone-400 block mb-1.5 uppercase">預定日期</label><input type="date" id="cust-date" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none bg-stone-50"></div>
+                <textarea id="cust-notes" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm h-32 outline-none resize-none bg-stone-50" placeholder="備註細節..."></textarea>
+                <button onclick="window.addCustomer()" class="w-full bg-[#8C7B6E] text-white py-4 rounded-xl font-bold shadow-lg">確認建立</button>
             </div>
         </div>
     </div>
 
+    <!-- 租借登記 -->
     <div id="modal-rental" class="hidden fixed inset-0 z-[150] flex items-center justify-center p-4 modal-backdrop">
-        <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden fade-in max-h-[90vh] flex flex-col border border-stone-100">
-            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center shrink-0"><h3 class="font-bold serif text-lg uppercase tracking-widest text-white">預約登記</h3><button onclick="window.closeModal('modal-rental')" class="p-1 text-white"><i data-lucide="x"></i></button></div>
-            <div class="p-6 space-y-6 overflow-y-auto custom-scroll">
+        <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden fade-in max-h-[90vh] flex flex-col">
+            <div class="bg-[#8C7B6E] p-6 text-white flex justify-between items-center"><h3 class="font-bold serif uppercase text-white">預約排程</h3><button onclick="window.closeModal('modal-rental')"><i data-lucide="x"></i></button></div>
+            <div class="p-8 space-y-6 overflow-y-auto custom-scroll">
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-bold text-stone-400 block mb-1.5 ml-1 uppercase text-stone-400">選擇服飾</label><select id="rent-gown" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none bg-stone-50"></select></div>
-                    <div><label class="text-[10px] font-bold text-stone-400 block mb-1.5 ml-1 uppercase text-stone-400">選擇客人</label><select id="rent-cust" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none bg-stone-50"></select></div>
+                    <div><label class="text-[10px] font-bold text-stone-400 block mb-1.5 ml-1">選擇服飾</label><select id="rent-gown" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none bg-stone-50"></select></div>
+                    <div><label class="text-[10px] font-bold text-stone-400 block mb-1.5 ml-1">選擇客人</label><select id="rent-cust" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none bg-stone-50"></select></div>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
-                    <div><label class="text-[10px] font-bold text-stone-400 block mb-1.5 uppercase tracking-widest text-stone-400">取衫日期</label><input type="date" id="rent-start" onchange="window.checkConflicts()" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none"></div>
-                    <div><label class="text-[10px] font-bold text-stone-400 block mb-1.5 uppercase tracking-widest text-stone-400">還衫日期</label><input type="date" id="rent-end" onchange="window.checkConflicts()" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none"></div>
+                    <div><label class="text-[10px] font-bold text-stone-400 block mb-1.5 uppercase">取衫日期</label><input type="date" id="rent-start" onchange="window.checkConflicts()" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none"></div>
+                    <div><label class="text-[10px] font-bold text-stone-400 block mb-1.5 uppercase">還衫日期</label><input type="date" id="rent-end" onchange="window.checkConflicts()" class="w-full border border-stone-200 rounded-xl p-3.5 text-sm outline-none"></div>
                 </div>
-                <div id="conflict-msg" class="hidden p-4 bg-red-50 text-red-600 text-[10px] font-bold rounded-xl flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4"></i> 日期衝突：此項目該時段已被預約！</div>
-                <button onclick="window.addRental()" id="btn-add-rental" class="w-full bg-[#8C7B6E] text-white py-4 rounded-xl font-bold shadow-lg active:scale-95 transition-all">確認鎖定預約</button>
+                <div id="conflict-msg" class="hidden p-4 bg-red-50 text-red-600 text-[10px] font-bold rounded-xl flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4"></i> 此時段已被佔用！</div>
+                <button onclick="window.addRental()" id="btn-add-rental" class="w-full bg-[#8C7B6E] text-white py-4 rounded-xl font-bold shadow-lg active:scale-95 transition-all">確認登記</button>
             </div>
         </div>
     </div>
 
-    <!-- AI 訊息彈窗 -->
+    <!-- AI 訊息框 -->
     <div id="modal-ai-box" class="hidden fixed inset-0 z-[210] flex items-center justify-center p-4 modal-backdrop">
         <div class="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden fade-in flex flex-col max-h-[80vh] border-t-8 border-[#8C7B6E]">
             <div class="p-6 shrink-0 flex justify-between items-center bg-stone-50/50">
                 <h3 class="font-bold flex items-center gap-2 text-stone-800 serif"><i data-lucide="sparkles" class="w-5 h-5 text-[#8C7B6E]"></i> AI 顧問協助</h3>
                 <button onclick="window.closeModal('modal-ai-box')" class="p-1 text-stone-300"><i data-lucide="x"></i></button>
             </div>
-            <div class="flex-1 p-8 overflow-y-auto custom-scroll italic text-sm leading-relaxed text-stone-600 shadow-inner" id="ai-content-body"></div>
+            <div class="flex-1 p-8 overflow-y-auto custom-scroll italic text-sm leading-relaxed text-stone-600" id="ai-content-body"></div>
             <div class="p-6 border-t border-stone-100 flex gap-3 bg-white">
-                <button onclick="window.copyToClipboard(document.getElementById('ai-content-body').innerText)" class="flex-1 bg-[#8C7B6E] text-white py-4 rounded-2xl font-bold shadow-md text-sm active:scale-95">複製內容</button>
+                <button onclick="window.copyToClipboard(document.getElementById('ai-content-body').innerText)" class="flex-1 bg-[#8C7B6E] text-white py-4 rounded-2xl font-bold text-sm active:scale-95">複製內容</button>
                 <button onclick="window.closeModal('modal-ai-box')" class="px-8 bg-stone-100 text-stone-400 rounded-2xl font-bold text-sm">關閉</button>
             </div>
         </div>
@@ -228,11 +234,11 @@
     <div id="modal-notifications" class="hidden fixed inset-0 z-[160] flex items-center justify-center p-4 modal-backdrop">
         <div class="bg-white w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden fade-in border-t-8 border-red-400 flex flex-col max-h-[80vh]">
             <div class="p-6 shrink-0 flex justify-between items-center bg-[#EF4444] text-white">
-                <h3 class="text-xl serif font-bold flex items-center gap-2"><i data-lucide="bell-ring" class="w-5 h-5"></i> 近期提醒</h3>
-                <button onclick="window.closeModal('modal-notifications')" class="p-1"><i data-lucide="x"></i></button>
+                <h3 class="text-xl serif font-bold flex items-center gap-2 text-white"><i data-lucide="bell-ring" class="w-5 h-5"></i> 近期提醒</h3>
+                <button onclick="window.closeModal('modal-notifications')" class="p-1 text-white"><i data-lucide="x"></i></button>
             </div>
             <div id="notif-list" class="flex-1 p-6 space-y-4 overflow-y-auto custom-scroll pt-4 pr-4"></div>
-            <div id="notif-empty" class="hidden py-12 text-center text-stone-400 italic serif text-sm">目前無待辦工作。</div>
+            <div id="notif-empty" class="py-12 text-center text-stone-400 italic serif text-sm">目前無待辦工作。</div>
             <div class="p-6 shrink-0 border-t border-stone-100 bg-white">
                 <button onclick="window.closeModal('modal-notifications')" class="w-full bg-stone-100 text-stone-600 py-3.5 rounded-xl font-bold active:bg-stone-200 transition-all">關閉視窗</button>
             </div>
@@ -244,29 +250,23 @@
         import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, addDoc, onSnapshot, updateDoc, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- 初始化配置 (安全名稱 configRaw) ---
-        const configRaw = typeof __firebase_config !== 'undefined' ? __firebase_config : null;
-        let firebaseConfig = configRaw ? JSON.parse(configRaw) : { apiKey: "preview", authDomain: "preview", projectId: "fenixclub-classic-tina" };
-        
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'fenixclub-classic-tina';
-        const apiKey = ""; // Gemini API Key
-
+        // --- 全域變數定義 ---
         let gowns = [], customers = [], rentals = [], currentUser = null;
+        let db, auth;
+        // 優先使用環境 appId
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'fenixclub-classic-tina';
+        const apiKey = ""; 
 
-        // --- 提示框工具 ---
+        // --- 工具：提示訊息 ---
         const showToast = (msg) => {
             const t = document.getElementById('toast');
             if (t) { t.innerText = msg; t.style.opacity = '1'; setTimeout(() => { t.style.opacity = '0'; }, 3000); }
         };
 
-        // --- 重要：掛載全域函數 (確保在任何情況下按鈕都有效) ---
-        const mountFunctions = () => {
+        // --- 核心掛載函數 ---
+        const initSystem = () => {
             window.openModal = (id) => {
-                const modal = document.getElementById(id);
-                if (modal) modal.classList.remove('hidden');
+                document.getElementById(id)?.classList.remove('hidden');
                 if (id === 'modal-rental') {
                     const gEl = document.getElementById('rent-gown');
                     const cEl = document.getElementById('rent-cust');
@@ -278,13 +278,13 @@
             window.closeModal = (id) => document.getElementById(id)?.classList.add('hidden');
             window.forceRevealApp = () => {
                 document.getElementById('loading-overlay')?.classList.add('hidden');
-                showToast("已進入離線展示模式");
+                if(!currentUser) showToast("已進入離線管理模式");
             };
-            window.copyCurrentLink = () => {
-                const el = document.createElement('textarea'); el.value = window.location.href;
-                document.body.appendChild(el); el.select(); document.execCommand('copy');
-                document.body.removeChild(el); showToast("連結已複製！請打開 Safari 貼上。");
+            window.saveManualConfig = () => {
+                const val = document.getElementById('config-input').value;
+                try { JSON.parse(val); localStorage.setItem('tina_cloud_config', val); window.location.reload(); } catch(e) { alert("JSON 格式錯誤"); }
             };
+            window.clearConfig = () => { localStorage.removeItem('tina_cloud_config'); window.location.reload(); };
             window.copyToClipboard = (text) => {
                 const el = document.createElement('textarea'); el.value = text;
                 document.body.appendChild(el); el.select(); document.execCommand('copy');
@@ -294,37 +294,39 @@
                 const term = document.getElementById('globalSearch')?.value || "";
                 renderInventory(term); renderCustomers(term);
             };
+
+            // 資料操作
             window.addGown = async () => {
                 const nEl = document.getElementById('gown-name');
-                if(!nEl?.value) return showToast("請輸入名稱");
-                if(!currentUser) return showToast("雲端未同步，目前僅支援本地預覽");
+                if(!nEl?.value) return showToast("請輸入項目名稱");
+                if(!currentUser) return showToast("⚠️ 目前為離線模式，無法儲存至雲端。");
                 try {
                     await addDoc(collection(db,'artifacts',appId,'public','data','gowns'),{ name:nEl.value, type:document.getElementById('gown-type').value, location:document.getElementById('gown-location').value, description:document.getElementById('gown-desc').value, status:'Available', createdAt:new Date().toISOString() });
-                    window.closeModal('modal-gown'); nEl.value = ''; showToast("新增成功！");
-                } catch(e) { showToast("連線受阻，儲存失敗"); }
+                    window.closeModal('modal-gown'); nEl.value = ''; showToast("雲端儲存成功！");
+                } catch(e) { console.error(e); showToast("權限不足，儲存失敗"); }
             };
             window.addCustomer = async () => {
                 const nEl = document.getElementById('cust-name');
                 if(!nEl?.value) return showToast("請輸入姓名");
-                if(!currentUser) return showToast("雲端同步失敗");
+                if(!currentUser) return showToast("⚠️ 雲端連線失敗，無法儲存");
                 try {
                     await addDoc(collection(db,'artifacts',appId,'public','data','customers'),{ name:nEl.value, phone:document.getElementById('cust-phone').value, weddingDate:document.getElementById('cust-date').value, notes:document.getElementById('cust-notes').value, createdAt:new Date().toISOString() });
                     window.closeModal('modal-customer'); showToast("客人建立成功！");
-                } catch(e) { showToast("儲存失敗"); }
+                } catch(e) { showToast("儲存失敗："+e.message); }
             };
             window.addRental = async () => {
                 const gid = document.getElementById('rent-gown').value;
                 const cname = document.getElementById('rent-cust').value;
-                if(!gid || !cname) return showToast("資料不齊全");
-                if(!currentUser) return showToast("同步異常");
+                if(!gid || !cname) return showToast("請填寫完整預約資料");
+                if(!currentUser) return showToast("⚠️ 雲端未同步");
                 try {
-                    await addDoc(collection(db,'artifacts',appId,'public','data','rentals'),{ gownId:gid, gownName:gowns.find(x=>x.id===gid)?.name || "未知", customerName:cname, startDate:document.getElementById('rent-start').value, endDate:document.getElementById('rent-end').value, status:'Confirmed', createdAt:new Date().toISOString() });
+                    await addDoc(collection(db,'artifacts',appId,'public','data','rentals'),{ gownId:gid, gownName:gowns.find(x=>x.id===gid)?.name || "未知項目", customerName:cname, startDate:document.getElementById('rent-start').value, endDate:document.getElementById('rent-end').value, status:'Confirmed', createdAt:new Date().toISOString() });
                     window.closeModal('modal-rental'); showToast("預約成功！");
-                } catch(e) { showToast("連線失敗"); }
+                } catch(e) { showToast("登記失敗："+e.message); }
             };
             window.deleteDocHandler = async (col, id) => {
-                if(!currentUser) return showToast("雲端未同步");
-                if(confirm("確定永久刪除？")) { await deleteDoc(doc(db,'artifacts',appId,'public','data',col,id)); showToast("已移除"); }
+                if(!currentUser) return showToast("離線模式無法刪除雲端資料");
+                if(confirm("確定永久刪除？")) { try { await deleteDoc(doc(db,'artifacts',appId,'public','data',col,id)); showToast("已從雲端移除"); } catch(e){ showToast("權限不足"); } }
             };
             window.checkConflicts = () => {
                 const gid = document.getElementById('rent-gown').value;
@@ -339,23 +341,6 @@
                 const link=document.createElement("a"); link.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
                 link.download=`Tina_Report_${new Date().toLocaleDateString()}.csv`; link.click();
             };
-            window.aiGenerateDesc = async () => {
-                const nEl = document.getElementById('gown-name');
-                if(!nEl?.value) return showToast("請輸入項目名稱");
-                const btn = document.getElementById('btn-ai-desc');
-                if(btn) { btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 loading-spin"></i>'; lucide.createIcons(); }
-                const res = await callGemini(`為「${nEl.value}」撰寫一段手工婚紗描述。`, "資深顧問。");
-                document.getElementById('gown-desc').value = res; if(btn) btn.innerHTML = '✨';
-            };
-        };
-
-        // --- ✨ Gemini AI 核心邏輯 ---
-        const callGemini = async (prompt, system) => {
-            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            try {
-                const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: system }] } }) });
-                const result = await response.json(); return result.candidates[0].content.parts[0].text;
-            } catch (e) { return "AI 連線逾時，進入手動輸入。"; }
         };
 
         // --- 渲染引擎 ---
@@ -364,35 +349,36 @@
             const filtered = gowns.filter(g => g.name.toLowerCase().includes(term.toLowerCase()));
             table.innerHTML = filtered.map(g => `
                 <tr class="hover:bg-stone-50 transition-colors text-xs font-medium fade-in">
-                    <td class="px-6 py-5"><p class="font-bold text-stone-700">${g.name}</p><span class="text-[8px] text-[#8C7B6E] font-bold uppercase tracking-tighter">${g.type}</span></td>
-                    <td class="px-6 py-5 text-center"><span class="px-2 py-0.5 rounded-full text-[9px] font-bold border ${g.status==='Available'?'bg-green-50 text-green-600 border-green-100':'bg-blue-50 text-blue-600 border-blue-100'}">${g.status==='Available'?'在庫':'租出'}</span></td>
+                    <td class="px-6 py-5 font-bold text-stone-700">${g.name}</td>
+                    <td class="px-6 py-5 text-center"><span class="px-2 py-0.5 rounded-full text-[9px] font-bold border ${g.status==='Available'?'bg-green-50 text-green-600 border-green-100':'bg-blue-50 text-blue-600 border-blue-100'}">${g.status==='Available'?'在店':'外借'}</span></td>
                     <td class="px-6 py-5 text-stone-500 font-medium">${g.location || '-'}</td>
                     <td class="px-8 py-5 text-right"><button onclick="window.deleteDocHandler('gowns','${g.id}')" class="text-stone-200 hover:text-red-400 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
                 </tr>
             `).join('');
-            document.getElementById('inventory-empty')?.classList.toggle('hidden', filtered.length > 0); lucide.createIcons();
+            document.getElementById('inventory-empty')?.classList.toggle('hidden', filtered.length > 0);
+            document.getElementById('gown-count').innerText = `${filtered.length} 件`; lucide.createIcons();
         }
 
         function renderCustomers(term = '') {
             const grid = document.getElementById('customer-grid'); if(!grid) return;
-            const filtered = customers.filter(c => c.name.toLowerCase().includes(term.toLowerCase()) || c.phone.includes(term));
+            const filtered = customers.filter(c => c.name.toLowerCase().includes(term.toLowerCase()) || c.phone?.includes(term));
             grid.innerHTML = filtered.map(c => `
-                <div class="bg-white p-5 section-card flex justify-between items-start fade-in shadow-sm hover:shadow-md transition-all border border-stone-100">
-                    <div><h3 class="font-bold text-stone-800 text-sm">${c.name}</h3><p class="text-[9px] text-stone-400 mt-1">${c.phone}</p><p class="text-[8px] font-bold text-[#8C7B6E] mt-3 uppercase tracking-widest">婚期: ${c.weddingDate || '未定'}</p></div>
-                    <div class="flex gap-2">
-                        <button onclick="window.deleteDocHandler('customers','${c.id}')" class="p-2 text-stone-200 hover:text-red-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    </div>
+                <div class="bg-white p-5 section-card flex justify-between items-start fade-in shadow-sm border border-stone-100">
+                    <div><h3 class="font-bold text-stone-800 text-sm">${c.name}</h3><p class="text-[9px] text-[#8C7B6E] mt-3 uppercase tracking-widest font-bold italic">日期: ${c.weddingDate || '未定'}</p></div>
+                    <button onclick="window.deleteDocHandler('customers','${c.id}')" class="p-2 text-stone-200 hover:text-red-400"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                 </div>
             `).join('');
-            document.getElementById('customers-empty')?.classList.toggle('hidden', filtered.length > 0); lucide.createIcons();
+            document.getElementById('customers-empty')?.classList.toggle('hidden', filtered.length > 0);
+            document.getElementById('cust-count').innerText = `${filtered.length} 位`; lucide.createIcons();
         }
 
         function renderRentals() {
             const list = document.getElementById('rental-list'); if(!list) return;
-            list.innerHTML = rentals.map(r => `
+            const sorted = [...rentals].sort((a,b) => new Date(a.startDate) - new Date(b.startDate));
+            list.innerHTML = sorted.map(r => `
                 <div class="bg-white border border-stone-100 p-4 rounded-2xl shadow-sm border-l-[6px] border-[#8C7B6E] flex flex-col gap-3 fade-in">
                     <div class="flex justify-between items-start">
-                        <div class="flex gap-3"><div class="w-9 h-9 bg-stone-50 rounded-lg flex items-center justify-center text-[#8C7B6E] shadow-inner"><i data-lucide="calendar-check" class="w-5 h-5"></i></div><div><h4 class="text-sm font-bold text-stone-800">${r.customerName}</h4><p class="text-[9px] text-stone-400">${r.gownName}</p></div></div>
+                        <div class="flex gap-3"><div class="w-9 h-9 bg-stone-50 rounded-lg flex items-center justify-center text-[#8C7B6E] shadow-inner"><i data-lucide="calendar" class="w-5 h-5"></i></div><div><h4 class="text-sm font-bold text-stone-800">${r.customerName}</h4><p class="text-[9px] text-stone-400 font-medium">${r.gownName}</p></div></div>
                     </div>
                     <div class="bg-stone-50 px-3 py-2 rounded-xl font-bold text-stone-500 text-[10px] flex justify-between items-center">
                         <span>${r.startDate} 至 ${r.endDate}</span>
@@ -400,35 +386,80 @@
                     </div>
                 </div>
             `).join('');
-            document.getElementById('rentals-empty')?.classList.toggle('hidden', rentals.length > 0); lucide.createIcons();
+            document.getElementById('rentals-empty')?.classList.toggle('hidden', rentals.length > 0);
+            document.getElementById('rent-count').innerText = `${rentals.length} 筆`; lucide.createIcons();
         }
 
-        // --- 啟動連線 ---
+        function processReminders() {
+            const t = new Date(); t.setHours(0,0,0,0); const alerts = [];
+            customers.forEach(c => {
+                if(!c.weddingDate) return; const d = new Date(c.weddingDate); d.setHours(0,0,0,0);
+                const diff = Math.ceil((d-t)/(1000*60*60*24));
+                if(diff===7) alerts.push({ name: c.name, type: '改裙提醒', days: 7, color: 'blue' });
+                if(diff===4) alerts.push({ name: c.name, type: '取衫提醒', days: 4, color: 'red' });
+            });
+            const badge = document.getElementById('notif-badge');
+            const list = document.getElementById('notif-list');
+            if(alerts.length > 0) {
+                if(badge) badge.classList.remove('hidden');
+                if(list) list.innerHTML = alerts.map(a => `<div class="p-4 rounded-xl bg-stone-50 border-l-4 ${a.color==='blue'?'border-blue-400':'border-red-400'} flex justify-between items-center mb-2 font-bold shadow-sm"><h4 class="text-xs">${a.name} - ${a.type}</h4><span class="text-[10px] ${a.color==='blue'?'text-blue-500':'text-red-500'}">剩 ${a.days} 天</span></div>`).join('');
+            } else { if(badge) badge.classList.add('hidden'); }
+        }
+
+        // --- 啟動與雲端連線 ---
         const startApp = async () => {
-            mountFunctions();
-            // 5 秒後顯示錯誤引導
-            setTimeout(() => { if(!currentUser) document.getElementById('setup-error')?.classList.remove('hidden'); }, 5000);
+            initSystem();
+            setTimeout(() => { if(!currentUser) document.getElementById('setup-help')?.classList.remove('hidden'); }, 5000);
+
+            let fbConfig;
+            const manualConfig = localStorage.getItem('tina_cloud_config');
+            if (manualConfig) { fbConfig = JSON.parse(manualConfig); } 
+            else { fbConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null; }
+
+            if (!fbConfig) { return; }
 
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) await signInWithCustomToken(auth, __initial_auth_token);
-                else await signInAnonymously(auth);
+                const fbApp = initializeApp(fbConfig);
+                auth = getAuth(fbApp);
+                db = getFirestore(fbApp);
+                
+                // 優先使用自定義 Token
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
                 
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
-                        currentUser = user; window.forceRevealApp();
+                        currentUser = user;
+                        window.forceRevealApp();
                         document.getElementById('status-text').innerText = "雲端同步成功";
                         document.getElementById('status-dot').className = "w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse";
                         document.getElementById('cloud-status-bar').className = "flex items-center justify-center gap-2 py-1 bg-green-50 text-green-600 rounded-lg border border-green-100/30";
                         setupListeners();
                     }
                 });
-            } catch (e) { document.getElementById('setup-error')?.classList.remove('hidden'); }
+            } catch (e) { console.error(e); }
         };
 
         function setupListeners() {
-            onSnapshot(collection(db,'artifacts',appId,'public','data','gowns'), s => { gowns=s.docs.map(d=>({id:d.id,...d.data()})); renderInventory(); const el = document.getElementById('gown-count'); if(el) el.innerText=`${gowns.length} 件`; }, (err) => console.log("Cloud blocked"));
-            onSnapshot(collection(db,'artifacts',appId,'public','data','customers'), s => { customers=s.docs.map(d=>({id:d.id,...d.data()})); renderCustomers(); const el = document.getElementById('cust-count'); if(el) el.innerText=`${customers.length} 位`; }, (err) => console.log("Cloud blocked"));
-            onSnapshot(collection(db,'artifacts',appId,'public','data','rentals'), s => { rentals=s.docs.map(d=>({id:d.id,...d.data()})); renderRentals(); const el = document.getElementById('rent-count'); if(el) el.innerText=`${rentals.length} 筆`; }, (err) => console.log("Cloud blocked"));
+            // 加入權限錯誤捕捉回調 (RULE 1 & 3 符合)
+            const gownsQuery = collection(db, 'artifacts', appId, 'public', 'data', 'gowns');
+            onSnapshot(gownsQuery, (s) => { gowns=s.docs.map(d=>({id:d.id,...d.data()})); renderInventory(); }, (err) => { 
+                console.error("Gowns Permission Denied:", err); 
+                showToast("讀取庫存權限不足，請檢查雲端規則。");
+            });
+
+            const custQuery = collection(db, 'artifacts', appId, 'public', 'data', 'customers');
+            onSnapshot(custQuery, (s) => { customers=s.docs.map(d=>({id:d.id,...d.data()})); renderCustomers(); processReminders(); }, (err) => {
+                console.error("Customers Permission Denied:", err);
+            });
+
+            const rentQuery = collection(db, 'artifacts', appId, 'public', 'data', 'rentals');
+            onSnapshot(rentQuery, (s) => { rentals=s.docs.map(d=>({id:d.id,...d.data()})); renderRentals(); }, (err) => {
+                console.error("Rentals Permission Denied:", err);
+            });
         }
 
         window.addEventListener('load', () => { lucide.createIcons(); startApp(); });
